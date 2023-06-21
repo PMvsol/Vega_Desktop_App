@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" type="text/css" href="/global.css" />
+	<title>Nova App</title>
+	<style>
+		.titlebar {
+			height: 30px;
+			user-select: none;
+			display: flex;
+			justify-content: flex-start;
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			justify-content: space-between
+		}
+
+		button {
+			border: 0;
+
+			outline: none;
+			position: static;
+			width: 10px;
+			height: 10px;
+
+
+			border-width: 0 0 1px 0;
+		}
+
+		input[type="color"] {
+
+			border: none;
+			width: 20px;
+			height: 10px;
+		}
+
+		input[type="color"]::-webkit-color-swatch-wrapper {
+			padding: 0;
+		}
+
+		input[type="color"]::-webkit-color-swatch {
+			border: none;
+		}
+
+
+
+		.wrapper {
+			display: flex;
+			justify-content: space-between
+		}
+
+		.titlebar-button {
+			display: inline-flex;
+			justify-content: center;
+			align-items: center;
+			align-self: flex-end;
+			width: 20px;
+			height: 20px;
+			margin-bottom: 6px;
+
+		}
+
+		/* .titlebar-button:hover {
+  background: #2d2d2d;
+} */
+
+		.filter-white {
+			filter: invert(90%) sepia(100%) saturate(0%) hue-rotate(255deg) brightness(106%) contrast(106%);
+		}
+
+		input[type="color"] {
+
+			background-color: transparent;
+			width: 18px;
+			height: 10px;
+			outline: none;
+		}
+
+		input[type="checkbox"] {
+			background-color: #525151;
+			border-color: gray;
+		}
+
+		input[type="checkbox"]:active {
+			background-color: #525151;
+		}
+
+		input[type="checkbox"]:checked {
+			background-color: #525151;
+		}
+
+		input[type="checkbox"]:checked:hover {
+			background-color: #747272;
+			border-color: lightgray;
+		}
+
+		input[type="checkbox"]:hover {
+			background-color: #747272;
+			border-color: lightgray;
+		}
+
+		input[type="checkbox"]:focus {
+			outline: none;
+			box-shadow: none;
+			accent-color: red;
+		}
+
+		input[type="color"]::-webkit-color-swatch {
+			border: solid 1px #ebe5e5;
+			/*change color of the swatch border here*/
+
+			box-shadow: 2px 2px 5px rgba(18, 3, 3, 0.1);
+			padding: 1px 2px;
+		}
+
+		#color-picker::-webkit-color-swatch {
+			border-radius: 100%;
+		}
+
+		#colorList {
+			z-index: 9999;
+			/* set a higher z-index value */
+			/* ... other styles ... */
+		}
+
+		/* Adjust z-index of other elements if needed */
+		#colorDiv {
+			z-index: 9998;
+			/* or any other value lower than the dropdown's z-index */
+			/* ... other styles ... */
+		}
+
+		.colorMain {
+			height: 9px;
+			padding: 1px;
+			margin-top: 10px;
+			border: 1px solid rgb(104, 101, 101);
+		}
+
+		#colorDiv {
+			margin-top: -1px;
+		}
+
+		.singlecolor {
+			cursor: default !important;
+			margin: 4px 2px 4px 5px;
+		}
+
+		.singlecolor:hover {
+			border: 2px solid rgb(14, 191, 223);
+
+		}
+
+		.screenSvg {
+			width: 15px;
+			height: 15px;
+		}
+
+		.btn {
+			background-color: #444444;
+		}
+
+		.btn:hover {
+			background-color: rgb(3, 111, 212) !important;
+		}
+	</style>
+</head>
+
+<body style=" overflow: hidden">
+	<div data-tauri-drag-region class="titlebar" id="titlebar" style="overflow: hidden;background: #2d2d2d;">
+		<div class="flex items-center ml-2">
+
+			<div id="headMenu">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="#e6db0b" viewBox="0 0 24 24" stroke-width="1.5"
+					stroke="currentColor" class="w-4 h-4 text-white">
+					<path stroke-linecap="round" stroke-linejoin="round"
+						d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+				</svg>
+			</div>
+
+			<div id="menuDropdown"
+				style="background-color: #303030;border:1px solid #262626;width:182px;z-index: 10000;display:none"
+				class='fixed top-6 mt-1 py-1 divide-y divide-gray-100'>
+				<ul aria-labelledby="doubleDropdownButton">
+					<li style="border-color:#3d3d3d"
+						class="hover:bg-blue-600 border-l border-gray-500 ml-1 cursor-default flex justify-end items-center">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+							stroke="currentColor" class="w-4 h-4 opacity-40 mr-2">
+							<path stroke-linecap="round" stroke-linejoin="round"
+								d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0118 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3l1.5 1.5 3-3.75" />
+						</svg>
+
+						<span style="border-color:#3d3d3d"
+							class="block w-10/12 text-xs border-l opacity-40 border-gray-500 p-1">Restore</span>
+					</li>
+					<li style="border-color:#3d3d3d"
+						class="hover:bg-blue-600 border-l border-gray-500 ml-1 cursor-default flex justify-end items-center"
+						id="move">
+						<span style="border-color:#3d3d3d"
+							class="block w-10/12 text-xs border-l border-gray-500 p-1 text-white"><span
+								class="border-b">M</span>ove</span>
+					</li>
+					<li style="border-color:#3d3d3d"
+						class="hover:bg-blue-600 border-l border-gray-500 ml-1 cursor-default flex justify-end items-center"
+						id="size">
+
+						<span style="border-color:#3d3d3d"
+							class="block w-10/12 text-xs text-white border-l border-gray-500 p-1"><span
+								class="border-b">S</span>ize</span>
+					</li>
+					<li id="minimize" style="border-color:#3d3d3d"
+						class="hover:bg-blue-600 border-l border-gray-500 ml-1 cursor-default flex justify-end items-center">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" stroke-width="1.5"
+							stroke="currentColor" class="w-4 mr-2 h-4 text-white">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
+						</svg>
+						<span style="border-color:#3d3d3d"
+							class="block w-10/12 text-xs border-l border-gray-500 text-white  p-1">Mi<span
+								class="border-b">n</span>imize</span>
+					</li>
+					<li style="border-color:#3d3d3d"
+						class="hover:bg-blue-600 border-l border-gray-500 ml-1 cursor-default flex justify-end items-center">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+							stroke="currentColor" class="h-4 w-4 mr-2 opacity-40">
+							<path stroke-linecap="" stroke-linejoin=""
+								d="M5.25 7.5A2.25 2.25 0 017.5 5.25h9a2.25 2.25 0 012.25 2.25v9a2.25 2.25 0 01-2.25 2.25h-9a2.25 2.25 0 01-2.25-2.25v-9z" />
+						</svg>
+						<span style="border-color:#3d3d3d"
+							class="block w-10/12 border-b text-xs opacity-40 border-l border-gray-500 p-1">Ma<span
+								class="border-b">x</span>imize</span>
+					</li>
+					<li id="close" style="border-color:#3d3d3d"
+						class="hover:bg-blue-600 border-l border-gray-500 ml-1 cursor-default flex justify-end items-center">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+							stroke="currentColor" class="w-4 text-white mr-2 h-4">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+						</svg>
+
+						<div class="flex justify-between items-center w-10/12 text-white">
+							<span style="border-color:#3d3d3d" class="block text-xs border-l border-gray-500 p-1"><span
+									class="border-b">C</span>lose</span>
+							<span class="block text-xs pr-4">ALT+F4</span>
+						</div>
+					</li>
+
+
+
+				</ul>
+
+			</div>
+
+
+			<span style="margin-left:4px;color:rgb(214, 209, 209);font-size: 12px;" class="flex items-center">DEMO
+				SYSTEM - Market Data Delayed - Most Active - Top Ten</span>
+		</div>
+		<div class="mr-2 flex center">
+			<div class="mr-1 colorMain">
+				<div id="colorDiv" style="width: 20px; height: 7px; border: 1px solid #181818; background-color: black;"
+					class="cursor-default">
+					<div style="background-color: #181818;border: 1px solid #5b5b5b;display: none;" id="colorList"
+						class='z-10 w-14 overflow-x-hidden fixed overflow-y-auto mt-4 h-52 divide-y divide-gray-100'>
+						<ul aria-labelledby="doubleDropdownButton w-10" style="background-color: #161616;">
+							<li class="hover:bg-gray-500 singlecolor block cursor-default text-xs colorOption"
+								data-color="#ba8c0f" style="background-color: #ba8c0f;"></li>
+							<li class="hover:bg-gray-500 singlecolor block py-2 cursor-default text-xs colorOption"
+								data-color="#c93c4b" style="background-color: #c93c4b;"></li>
+							<li class="hover:bg-gray-500 singlecolor block py-2 cursor-default text-xs colorOption"
+								data-color="#cc6923" style="background-color: #cc6923;"></li>
+							<li class="hover:bg-gray-500 singlecolor block  py-2 cursor-default text-xs colorOption"
+								data-color="#994399" style="background-color: #994399;"></li>
+							<li class="hover:bg-gray-500 singlecolor block  py-2 cursor-default text-xs colorOption"
+								data-color="#39ccaf" style="background-color: #39ccaf;"></li>
+							<li class="hover:bg-gray-500 singlecolor block  py-2 cursor-default text-xs colorOption"
+								data-color="#043a40" style="background-color: #043a40;"></li>
+							<li class="hover:bg-gray-500 singlecolor block  py-2 cursor-default text-xs colorOption"
+								data-color="#39ccaf" style="background-color: #39ccaf;"></li>
+							<li class="hover:bg-gray-500 singlecolor block  py-2 cursor-default text-xs colorOption"
+								data-color="#4f4c61" style="background-color: #4f4c61;"></li>
+							<li class="hover:bg-gray-500 singlecolor block  py-2 cursor-default text-xs colorOption"
+								data-color="#13bd1b" style="background-color: #13bd1b;"></li>
+							<li class="hover:bg-gray-500 singlecolor block  py-2 cursor-default text-xs colorOption"
+								data-color="#161716" style="background-color: #161716;"></li>
+							<li class="hover:bg-gray-500 singlecolor block  py-2 cursor-default text-xs colorOption"
+								data-color="#cf1358" style="background-color: #cf1358;"></li>
+							<li class="hover:bg-gray-500 singlecolor block  py-2 cursor-default text-xs colorOption"
+								data-color="#e8931c" style="background-color: #e8931c;"></li>
+							<li class="hover:bg-gray-500 singlecolor block  py-2 cursor-default text-xs colorOption"
+								data-color="#662a07" style="background-color: #662a07;"></li>
+						</ul>
+					</div>
+
+				</div>
+
+
+			</div>
+			<div class="hidden">
+				<input type="color" value="#ffff00" class="form-control form-control-color" id="colorPicker" list="">
+			</div>
+			<div class="cursor-default mr-1 hover:bg-gray-600 titlebar-button" id="titlebar-minimize">
+				<!-- <img
+		  	class="filter-white"
+			src="https://api.iconify.design/mdi:window-minimize.svg"
+			alt="minimize"
+		  /> -->
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+					stroke="currentColor" class="w-4 h-4 text-white">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M18 12H6" />
+				</svg>
+
+			</div>
+			<div class="titlebar-button mr-1 hover:bg-transparent" id="titlebar-maximize">
+				<!-- <img
+		    class="filter-white"
+			src="https://api.iconify.design/mdi:window-maximize.svg"
+			alt="maximize"
+		  /> -->
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+					stroke="currentColor" class="screenSvg text-gray-400">
+					<path stroke-linecap="" stroke-linejoin=""
+						d="M5.25 7.5A2.25 2.25 0 017.5 5.25h9a2.25 2.25 0 012.25 2.25v9a2.25 2.25 0 01-2.25 2.25h-9a2.25 2.25 0 01-2.25-2.25v-9z" />
+				</svg>
+
+
+			</div>
+			<div class="titlebar-button cursor-default hover:bg-red-600" id="titlebar-close">
+				<!-- / <img class="filter-white" src="https://api.iconify.design/mdi:close.svg" alt="close" /> -->
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+					stroke="currentColor" class="w-4 h-4">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+				</svg>
+
+			</div>
+
+		</div>
+	</div>
+
+	<div style="margin-top:24px" id="root"></div>
+	<div id="TopTen"></div>
+
+	<script type="module" src="/dist/TopTen.js"></script>
+</body>
+
+
+<script type="module">
+
+	import { appWindow } from "@tauri-apps/api/window";
+
+	var headMenu = document.getElementById("headMenu")
+	var menuDropdown = document.getElementById("menuDropdown")
+
+	console.log("Here");
+	document.getElementById("titlebar-minimize").addEventListener("click", () => {
+		appWindow.minimize()
+	});
+	document.getElementById("minimize").addEventListener("click", () => {
+		appWindow.minimize()
+	});
+
+
+	document.getElementById("move").addEventListener("click", () => {
+		menuDropdown.style.display = 'none'
+	})
+	document.getElementById("size").addEventListener("click", () => {
+		menuDropdown.style.display = 'none'
+	})
+	// document
+	//   .getElementById("titlebar-maximize")
+	//   .addEventListener("click", () => appWindow.toggleMaximize());
+
+	document
+		.getElementById("titlebar-close")
+		.addEventListener("click", () => {
+			appWindow.close()
+		});
+	document
+		.getElementById("close")
+		.addEventListener("click", () => {
+			menuDropdown.style.display = 'none'
+			appWindow.close()
+		});
+
+
+
+	//   function myFunction() {
+	// 		  var x = document.getElementById("colorPicker").value;
+	// 		  console.log(x);
+	// 		}
+
+
+	//color picker
+	var colorDiv = document.getElementById('colorDiv');
+	var colorList = document.getElementById('colorList');
+	var colorOptions = document.getElementsByClassName('colorOption');
+
+
+	colorDiv.addEventListener('click', function () {
+		if (colorList.style.display === 'block') {
+			colorList.style.display = 'none';
+		} else {
+			colorList.style.display = 'block';
+		}
+	});
+
+	for (var i = 0; i < colorOptions.length; i++) {
+		colorOptions[i].addEventListener('click', function () {
+			var selectedColor = this.getAttribute('data-color');
+
+			colorDiv.style.backgroundColor = selectedColor;
+
+			colorList.style.display = 'none';
+		});
+	}
+
+	var titlebar = document.getElementById('titlebar');
+	titlebar.addEventListener('click', function () {
+		titlebar.style.backgroundColor = '#232324'
+	})
+
+
+	//head menu work
+	headMenu.addEventListener('click', function () {
+		console.log(menuDropdown.style.display)
+		if (menuDropdown.style.display == 'none') {
+			menuDropdown.style.display = 'block'
+		} else {
+			menuDropdown.style.display = 'none'
+		}
+	})
+
+</script>
+
+</html>

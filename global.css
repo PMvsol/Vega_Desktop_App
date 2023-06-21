@@ -1,0 +1,120 @@
+html {
+    font-size: 16px;
+}
+
+.titlebar {
+  height: 30px;
+  background: #329ea3;
+  user-select: none;
+  display: flex;
+  justify-content: flex-end;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+.titlebar-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+}
+.titlebar-button:hover {
+  background: #5bbec3;
+}
+
+.hotKey-content {
+  padding: 0% !important;
+  border: none;
+  width: 598px;
+  height: 170px;
+}
+
+.specialHotKey-content {
+  padding: 0% !important;
+  border: none;
+  width: 400px;
+  height: 277px;
+}
+
+.configure-content{
+  padding: 0% !important;
+  border: none;
+  width: 300px;
+  height: 350px;
+}
+
+.interest-content{
+  padding: 0% !important;
+  border: none;
+  width: 185px;
+  height: 140px;
+}
+
+.error-content{
+  padding: 0% !important;
+  border: none;
+  width: 450px;
+  height: 120px;
+}
+
+.error2-content{
+  padding: 0% !important;
+  border: none;
+  width: 200px;
+  height: 120px;
+}
+
+.confirmation-content{
+  padding: 0% !important;
+  border: none;
+  width: 340px;
+  height: 120px;
+}
+
+.destination-content{
+  padding: 0% !important;
+  border: none;
+  width: 185px;
+  height: 60px;
+}
+
+.levelTab-content{
+  padding: 0% !important;
+  border: none;
+  width: 290px;
+  height: 400px;
+}
+
+.customRouting-content{
+  padding: 0% !important;
+  border: none;
+  width: 300px;
+  height: 350px;
+}
+
+.addCustomRouting-content{
+  padding: 0% !important;
+  border: none;
+  width: 238px;
+  height: 130px;
+}
+
+.mantine-Input-input{
+  padding: 0px 0px 0px 4px !important;
+  background-color: #181818;
+  width: 80px;
+}
+
+.mantine-TimeField-timeInput, .mantine-Text-root{
+  height: 15px !important;
+  font-size: 12px !important;
+  padding: 0px !important;
+  background-color: transparent !important;
+  border-width: 0px !important;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" type="text/css" href="/global.css" />
+	<title>Clock</title>
+	<style>
+		.titlebar {
+  height: 30px;
+  background: #1d1d1d; 
+  user-select: none;
+  display: flex;
+  justify-content: flex-start;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  justify-content: space-between
+
+}
+.wrapper{
+	display: flex;
+	justify-content: space-between
+}
+.titlebar-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  align-self: flex-end;
+  width: 20px;
+  height: 20px;
+
+}
+.titlebar-button:hover {
+  background: #2d2d2d;
+}
+.filter-white{
+    filter: invert(90%) sepia(100%) saturate(0%) hue-rotate(255deg) brightness(106%) contrast(106%);
+}
+	</style>
+
+</head>
+
+<body>
+	<div data-tauri-drag-region class="titlebar shadow-2xl" style=" overflow: hidden;">
+		<span style="margin-left:10px;color:white">Clock</span>
+		<div class="mr-2">
+		<div  class="cursor-pointer titlebar-button" id="titlebar-minimize">
+		  <img
+		  	class="filter-white"
+			src="https://api.iconify.design/mdi:window-minimize.svg"
+			alt="minimize"
+		  />
+		</div>
+		<div class="titlebar-button cursor-pointer" id="titlebar-maximize">
+		  <img
+		    class="filter-white"
+			src="https://api.iconify.design/mdi:window-maximize.svg"
+			alt="maximize"
+			
+		  />
+		</div>
+		<div class="titlebar-button cursor-pointer" id="titlebar-close">
+		  <img class="filter-white" src="https://api.iconify.design/mdi:close.svg" alt="close" />
+		</div>
+	</div>
+	</div>	
+
+<div style="margin-top:30px" id="clock"></div>
+
+<script type="module" src="/dist/clock.js"></script>
+<script type="module">
+
+	import { appWindow } from "@tauri-apps/api/window";
+	console.log("Here")
+	document
+  .getElementById("titlebar-minimize")
+  .addEventListener("click", () => appWindow.minimize());
+document
+  .getElementById("titlebar-maximize")
+  .addEventListener("click", () => appWindow.toggleMaximize());
+document
+  .getElementById("titlebar-close")
+  .addEventListener("click", () => appWindow.close());
+
+</script>
+</body>
+</html>
